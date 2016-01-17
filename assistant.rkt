@@ -32,7 +32,7 @@
                                                           (send display-expr set-label "-")
                                                           (send txt-value set-value "?"))
                                                         (begin
-                                                          (send display-expr set-label (format "~a" expr-str))
+                                                          (send display-expr set-label (format "~s" expr))
                                                           (send display-value set-label (format "~s" (car ans)))
                                                           (send txt-value set-value "?"))))))))))))
                (txt-value (new text-field%
@@ -63,7 +63,7 @@
                                                            (send display-value set-label "-")
                                                            (send txt-expr set-value "?"))
                                                          (begin
-                                                           (send display-value set-label (format "~a" value-str))
+                                                           (send display-value set-label (format "~s" value))
                                                            (send display-expr set-label (format "~s" (car ans)))
                                                            (send txt-expr set-value "?")))))))))))))
         (send frame show #t)))))
