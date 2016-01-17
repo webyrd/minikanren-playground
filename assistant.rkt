@@ -29,16 +29,26 @@
                                             (let ((expr-str (send button get-value)))
                                               (let ((sp (open-input-string expr-str)))
                                                 (let ((expr (read sp)))
-                                                  (let ((ans (run 1 (value) (evalo expr value))))
-                                                    (if (null? ans)
-                                                        (begin
-                                                          (send display-value set-label "-")
-                                                          (send display-expr set-label "-")
-                                                          (send txt-value set-value "?"))
-                                                        (begin
-                                                          (send display-expr set-label (format "~s" expr))
-                                                          (send display-value set-label (format "~s" (car ans)))
-                                                          (send txt-value set-value "?"))))))))))))
+                                                   (let ((e (engine
+                                                             (lambda (_)
+                                                               (run 1 (value) (evalo expr value))))))
+                                                     (let ((completed (engine-run TIMEOUT-MS e)))
+                                                       (engine-kill e)
+                                                       (if completed
+                                                           (let ((ans (engine-result e)))
+                                                             (if (null? ans)
+                                                                 (begin
+                                                                   (send display-value set-label "-")
+                                                                   (send display-expr set-label "-")
+                                                                   (send txt-value set-value "?"))
+                                                                 (begin
+                                                                   (send display-expr set-label (format "~s" expr))
+                                                                   (send display-value set-label (format "~s" (car ans)))
+                                                                   (send txt-value set-value "?"))))
+                                                           (begin
+                                                             (send display-expr set-label "timed out")
+                                                             (send display-value set-label "timed out")
+                                                             (send txt-expr set-value "?")))))))))))))
                (txt-value (new text-field%
                                (label "value")
                                (parent frame)
