@@ -8,8 +8,17 @@
 ;;; timeout, in milliseconds
 (define TIMEOUT-MS 100)
 
+
+;;; window size
+(define HORIZ-SIZE 800)
+(define VERT-SIZE 700)
+
+
 (define (assistant)
-  (let ((frame (new frame% (label "Synthesis Assistant"))))
+  (let ((frame (new frame%
+                    (label "Synthesis Assistant")
+                    (width HORIZ-SIZE)
+                    (height VERT-SIZE))))
     (let ((display-expr (new message% (parent frame)
                              (label "display-expr")
                              (auto-resize #t)))
