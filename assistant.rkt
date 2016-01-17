@@ -9,7 +9,7 @@
 (define TIMEOUT-MS 100)
 
 (define (assistant)
-  (let ((frame (new frame% (label "frame"))))
+  (let ((frame (new frame% (label "Synthesis Assistant"))))
     (let ((display-expr (new message% (parent frame)
                              (label "display-expr")
                              (auto-resize #t)))
@@ -56,6 +56,7 @@
                                                              (lambda (_)
                                                                (run 1 (expr) (evalo expr value))))))
                                                      (let ((completed (engine-run TIMEOUT-MS e)))
+                                                       (engine-kill e)
                                                        (if completed
                                                            (let ((ans (engine-result e)))
                                                              (if (null? ans)
