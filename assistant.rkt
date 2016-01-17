@@ -3,6 +3,10 @@
 (require "mk.rkt")
 (require "interp-uber.rkt")
 (require racket/gui/base)
+(require racket/engine)
+
+;;; timeout, in milliseconds
+(define TIMEOUT-MS 100)
 
 (define (assistant)
   (let ((frame (new frame% (label "frame"))))
@@ -47,23 +51,24 @@
                                                               (send txt-expr set-value "?"))])
                                              (let ((value-str (send button get-value)))
                                                (let ((sp (open-input-string value-str)))
-                                                 (display "reading value string...")
-                                                 (newline)
                                                  (let ((value (read sp)))
-                                                   (display "value: ")
-                                                   (display value)
-                                                   (newline)
-                                                   (let ((ans (run 1 (expr) (evalo expr value))))
-                                                     (display "ans: ")
-                                                     (display ans)
-                                                     (newline)
-                                                     (if (null? ans)
-                                                         (begin
-                                                           (send display-expr set-label "-")
-                                                           (send display-value set-label "-")
-                                                           (send txt-expr set-value "?"))
-                                                         (begin
-                                                           (send display-value set-label (format "~s" value))
-                                                           (send display-expr set-label (format "~s" (car ans)))
-                                                           (send txt-expr set-value "?")))))))))))))
+                                                   (let ((e (engine
+                                                             (lambda (_)
+                                                               (run 1 (expr) (evalo expr value))))))
+                                                     (let ((completed (engine-run TIMEOUT-MS e)))
+                                                       (if completed
+                                                           (let ((ans (engine-result e)))
+                                                             (if (null? ans)
+                                                                 (begin
+                                                                   (send display-expr set-label "-")
+                                                                   (send display-value set-label "-")
+                                                                   (send txt-expr set-value "?"))
+                                                                 (begin
+                                                                   (send display-value set-label (format "~s" value))
+                                                                   (send display-expr set-label (format "~s" (car ans)))
+                                                                   (send txt-expr set-value "?"))))
+                                                           (begin
+                                                             (send display-expr set-label "timed out")
+                                                             (send display-value set-label "timed out")
+                                                             (send txt-expr set-value "?"))))))))))))))
         (send frame show #t)))))
