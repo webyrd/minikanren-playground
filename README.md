@@ -1,6 +1,6 @@
 # synthesis-assistant
 
-<nothing here yet...in work>
+nothing here yet...in work
 
 Extremely early prototype of an interactive programming assistant, based on the relational interpreter approach in miniKanren.
 
