@@ -1,5 +1,8 @@
 #lang racket
 
+;;; Very simple interactive interface to the relational interpreter, with 'expr' and 'value' text fields.
+;;; Uses engines to enforce timeouts for potentially divergent inputs.
+
 (require "mk.rkt")
 (require "interp-uber.rkt")
 (require racket/gui/base)
