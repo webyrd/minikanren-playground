@@ -23,32 +23,38 @@
                     (label "Synthesis Assistant")
                     (width HORIZ-SIZE)
                     (height VERT-SIZE))))
-    (let ((display-ans (new message% (parent frame)
-                            (label "display-ans")
-                            (auto-resize #t))))
-      (letrec ((txt-query (new text-field%
-                               (label "query")
-                               (parent frame)
-                               (init-value "")
-                               (callback (lambda (button event)
-                                           (with-handlers ([exn:fail?
-                                                            (lambda (exn)
-                                                              (send display-ans set-label "-"))])
-                                             (let ((query-str (send button get-value)))
-                                               (let ((sp (open-input-string query-str)))
-                                                 (let ((query (read sp)))
-                                                   (let ((e (engine
-                                                             (lambda (_)
-                                                               (eval `(run 1 (q) ,query))))))
-                                                     (let ((completed (engine-run TIMEOUT-MS e)))
-                                                       (engine-kill e)
-                                                       (if completed
-                                                           (let ((ans (engine-result e)))
-                                                             (if (null? ans)
-                                                                 (begin
-                                                                   (send display-ans set-label "-"))
-                                                                 (begin
-                                                                   (send display-ans set-label (format "~s" (car ans))))))
-                                                           (begin
-                                                             (send display-ans set-label "timed out"))))))))))))))
-        (send frame show #t)))))
+    (letrec ((txt-query (new text-field%
+                             (label "query")
+                             (parent frame)
+                             (init-value "")
+                             (callback (lambda (button event)
+                                         (with-handlers ([exn:fail?
+                                                          (lambda (exn)
+                                                            (send display-full-query set-label "-")
+                                                            (send display-ans set-label "-"))])
+                                           (let ((query-str (send button get-value)))
+                                             (let ((sp (open-input-string query-str)))
+                                               (let ((query (read sp)))
+                                                 (let ((e (engine
+                                                           (lambda (_)
+                                                             (let ((full-query-expr `(run 1 (q) ,query)))
+                                                               (send display-full-query set-label (format "~s" full-query-expr))
+                                                               (eval full-query-expr))))))
+                                                   (let ((completed (engine-run TIMEOUT-MS e)))
+                                                     (engine-kill e)
+                                                     (if completed
+                                                         (let ((ans (engine-result e)))
+                                                           (if (null? ans)
+                                                               (begin
+                                                                 (send display-ans set-label "-"))
+                                                               (begin
+                                                                 (send display-ans set-label (format "~s" (car ans))))))
+                                                         (begin
+                                                           (send display-ans set-label "timed out")))))))))))))
+             (display-ans (new message% (parent frame)
+                               (label "display-ans")
+                               (auto-resize #t)))
+             (display-full-query (new message% (parent frame)
+                                      (label "display-full-query")
+                                      (auto-resize #t))))
+      (send frame show #t))))
