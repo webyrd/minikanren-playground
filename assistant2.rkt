@@ -29,7 +29,7 @@
       (letrec ((txt-query (new text-field%
                                (label "query")
                                (parent frame)
-                               (init-value "?")
+                               (init-value "")
                                (callback (lambda (button event)
                                            (with-handlers ([exn:fail?
                                                             (lambda (exn)
