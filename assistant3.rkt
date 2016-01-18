@@ -11,12 +11,12 @@
 
 
 ;;; timeout, in milliseconds
-(define TIMEOUT-MS 100)
+(define TIMEOUT-MS 500)
 
 
 ;;; window size
 (define HORIZ-SIZE 800)
-(define VERT-SIZE 700)
+(define VERT-SIZE 400)
 
 (define FRESH-VARS-STR-INIT "(a* e in out)")
 (define PROGRAM-NAME-STR-INIT "fn")
