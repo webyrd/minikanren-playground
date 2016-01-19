@@ -6,4 +6,6 @@ To run the playground, load the file `playground.rkt` in DrRacket, press the `Ru
 
 The directory `PaperScreenshots` contains a few possible interface ideas.
 
+Older, mostly obsolete versions of the playground can be found in the files `assistant1.rkt` through `assistant6.rkt`.
+
 Thanks to Michael Ballantyne and Alex Warth for discussions and early feedback on the idea, and to Evan Czaplicki, Stephanie Weirich, Nehal Patel, and Matt Hammer for inspiration.
